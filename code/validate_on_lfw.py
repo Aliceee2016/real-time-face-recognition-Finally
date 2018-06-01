@@ -47,8 +47,8 @@ def main(args):
         with tf.Session() as sess:
             # Read the file containing the pairs used for testing
             pairs = lfw.read_pairs(os.path.expanduser(args.lfw_pairs))
-            lfw_dir = '../data/lfw/lfw_mtcnnpy_160'
-            model = '../models/20180402-114759/'
+            lfw_dir = '../data/lfw_mtcnnpy_160'
+            model = '../models/facenet/20180601-170420'
             # Get the paths for the corresponding images
             # lfw_dir = '../data/output_align'
             # model = '../models/20180402-114759/'
@@ -62,6 +62,10 @@ def main(args):
 
             nrof_preprocess_threads = 4
             image_size = (args.image_size, args.image_size)
+            # input_queue = data_flow_ops.FIFOQueue(capacity=100000,
+            #                                       dtypes=[tf.string, tf.int64],
+            #                                       shapes=[(1,), (1,)],
+            #                                       shared_name=None, name=None)
             eval_input_queue = data_flow_ops.FIFOQueue(capacity=2000000,
                                                        dtypes=[tf.string, tf.int32, tf.int32],
                                                        shapes=[(1,), (1,), (1,)],

@@ -11,6 +11,7 @@ from align_all import detect_face
 import os
 import time
 import pickle
+from tensorflow.python.ops import data_flow_ops
 
 print('Creating networks and loading parameters')
 with tf.Graph().as_default():
@@ -25,13 +26,13 @@ with tf.Graph().as_default():
         margin = 44
         frame_interval = 3
         batch_size = 1000
-        image_size = 182
+        image_size = 160
         input_image_size = 160
 
-        HumanNames = ['Human_45','Human_99','Human_100','Human_102','Human_103','Human_105','Human_107','Human_108', 'Human_114' ,'Human_117','guixiuxiu','zfl']    #train human name
+        HumanNames = ['Human_45','Human_99','Human_100','Human_102','Human_103','Human_105','Human_107','Human_108', 'Human_114' ,'Human_117','guixiuxiu']    #train human name
 
         print('Loading feature extraction model')
-        modeldir = '../models/20180402-114759/20180402-114759.pb'
+        modeldir = '../models/facenet/20180601-170420/20180601-170420.pb'
         facenet.load_model(modeldir)
 
         images_placeholder = tf.get_default_graph().get_tensor_by_name("input:0")
@@ -39,7 +40,7 @@ with tf.Graph().as_default():
         phase_train_placeholder = tf.get_default_graph().get_tensor_by_name("phase_train:0")
         embedding_size = embeddings.get_shape()[1]
 
-        classifier_filename = '../my_classifier/my_classifier.pkl'
+        classifier_filename = '../classifier/my_classifier_bad.pkl'
         classifier_filename_exp = os.path.expanduser(classifier_filename)
         with open(classifier_filename_exp, 'rb') as infile:
             (model, class_names) = pickle.load(infile)

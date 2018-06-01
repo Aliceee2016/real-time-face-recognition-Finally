@@ -49,11 +49,11 @@ from tensorflow.python.ops import array_ops
 def main(args):
     logs_base_dir = "../logs/facenet/"
     models_base_dir = "../models/facenet"
-    data_dir = "../output_align"
+    data_dir = "../data/images_mtcnn_160/"
     image_size = 160
     model_def = 'models.inception_resnet_v1'
     optimizer = "RMSPROP"
-    max_nrof_epochs = 80
+    max_nrof_epochs = 1
     keep_probability = 0.8
     random_crop = 1
     random_flip = 1
@@ -124,10 +124,10 @@ def main(args):
 
         image_paths_placeholder = tf.placeholder(tf.string, shape=(None, 1), name='image_paths')
 
-        labels_placeholder = tf.placeholder(tf.int64, shape=(None, 1), name='labels')
+        labels_placeholder = tf.placeholder(tf.int32, shape=(None, 1), name='labels')
 
         input_queue = data_flow_ops.FIFOQueue(capacity=100000,
-                                              dtypes=[tf.string, tf.int64],
+                                              dtypes=[tf.string, tf.int32],
                                               shapes=[(1,), (1,)],
                                               shared_name=None, name=None)
         enqueue_op = input_queue.enqueue_many([image_paths_placeholder, labels_placeholder], name='enqueue_op')
@@ -309,7 +309,7 @@ def train(args, sess, epoch, image_list, label_list, index_dequeue_op, enqueue_o
         start_time = time.time()
         feed_dict = {learning_rate_placeholder: lr, phase_train_placeholder: True,
                      batch_size_placeholder: args.batch_size}
-        if (batch_number % 100 == 0):
+        if (batch_number % 10 == 0):
             err, _, step, reg_loss, summary_str = sess.run(
                 [loss, train_op, global_step, regularization_losses, summary_op], feed_dict=feed_dict)
             summary_writer.add_summary(summary_str, global_step=step)
@@ -380,6 +380,9 @@ def save_variables_and_metagraph(sess, saver, summary_writer, model_dir, model_n
     print('Variables saved in %.2f seconds' % save_time_variables)
     metagraph_filename = os.path.join(model_dir, 'model-%s.meta' % model_name)
     save_time_metagraph = 0
+
+    # with tf.gfile.FastGFile(model_dir + 'model-%s.pb' % model_name, mode='wb') as f:
+    #     f.write(saver.export_meta_graph.SerializeToString())
     if not os.path.exists(metagraph_filename):
         print('Saving metagraph')
         start_time = time.time()
@@ -391,6 +394,7 @@ def save_variables_and_metagraph(sess, saver, summary_writer, model_dir, model_n
     summary.value.add(tag='time/save_variables', simple_value=save_time_variables)
     summary.value.add(tag='time/save_metagraph', simple_value=save_time_metagraph)
     summary_writer.add_summary(summary, step)
+
 
 
 def parse_arguments(argv):
@@ -411,13 +415,13 @@ def parse_arguments(argv):
                         help='Model definition. Points to a module containing the definition of the inference graph.',
                         default='models.inception_resnet_v1')
     parser.add_argument('--max_nrof_epochs', type=int,
-                        help='Number of epochs to run.', default=500)
+                        help='Number of epochs to run.', default=5)
     parser.add_argument('--batch_size', type=int,
-                        help='Number of images to process in a batch.', default=90)
+                        help='Number of images to process in a batch.', default=5)
     parser.add_argument('--image_size', type=int,
                         help='Image size (height, width) in pixels.', default=160)
     parser.add_argument('--epoch_size', type=int,
-                        help='Number of batches per epoch.', default=1000)
+                        help='Number of batches per epoch.', default=5)
     parser.add_argument('--embedding_size', type=int,
                         help='Dimensionality of the embedding.', default=128)
     parser.add_argument('--random_crop',

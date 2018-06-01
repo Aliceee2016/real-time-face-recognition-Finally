@@ -38,7 +38,7 @@ from time import sleep
 
 def main():
     sleep(random.random())
-    output_dir_path = '../../data/lfw/lfw_mtcnnpy_160'
+    output_dir_path = '../../data/images_mtcnn_160/'
     output_dir = os.path.expanduser(output_dir_path)
     if not os.path.exists(output_dir):
         
@@ -46,7 +46,7 @@ def main():
     # Store some git revision info in a text file in the log directory
     # src_path, _ = os.path.split(os.path.realpath(__file__))
     # facenet.store_revision_info(src_path, output_dir, ' '.join(sys.argv))
-    datadir = '../../data/lfw/raw'
+    datadir = '../../data/images'
     dataset = facenet.get_dataset(datadir)
     gpu_memory_fraction = 0.25
 

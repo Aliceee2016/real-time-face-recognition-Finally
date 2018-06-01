@@ -9,21 +9,24 @@ import os
 import math
 import pickle
 from sklearn.svm import SVC
+from tensorflow.python.ops import data_flow_ops
 
 
 with tf.Graph().as_default():
 
     with tf.Session() as sess:
 
-        datadir = '../output_align'
+        datadir = '../data/images_mtcnn_160'
         dataset = facenet.get_dataset(datadir)
         paths, labels = facenet.get_image_paths_and_labels(dataset)
         print('Number of classes: %d' % len(dataset))
         print('Number of images: %d' % len(paths))
 
         print('Loading feature extraction model')
-        modeldir = '../models/20180402-114759/20180402-114759.pb'
+        print('Loading feature extraction model')
+        modeldir = '../models/facenet/20180601-170420/20180601-170420.pb'
         facenet.load_model(modeldir)
+
 
         images_placeholder = tf.get_default_graph().get_tensor_by_name("input:0")
         embeddings = tf.get_default_graph().get_tensor_by_name("embeddings:0")
@@ -45,7 +48,7 @@ with tf.Graph().as_default():
             feed_dict = {images_placeholder: images, phase_train_placeholder: False}
             emb_array[start_index:end_index, :] = sess.run(embeddings, feed_dict=feed_dict)
 
-        classifier_filename = '../my_classifier/my_classifier.pkl'
+        classifier_filename = '../classifier/my_classifier.pkl'
         classifier_filename_exp = os.path.expanduser(classifier_filename)
 
         # Train classifier
