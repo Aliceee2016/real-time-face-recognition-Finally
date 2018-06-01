@@ -1,5 +1,7 @@
 # real-time-face-recognition
 #我使用的模型链接:https://pan.baidu.com/s/1K5oao8bS2_qoV86_XaHpeA  密码:akoj
+
+
 每个人三十多张图比较好
 加入了自己训练模型的代码，之前看不懂就没有加
 train_softmax.py中如下参数设置比较合适
