@@ -46,12 +46,11 @@ def main(args):
     with tf.Graph().as_default():
         with tf.Session() as sess:
             # Read the file containing the pairs used for testing
-            pairs = lfw.read_pairs(os.path.expanduser(args.lfw_pairs))
+            model = '../models/facenet/20180602-095622'
             lfw_dir = '../data/lfw_mtcnnpy_160'
-            model = '../models/facenet/20180601-170420'
+            pairs = lfw.read_pairs(os.path.expanduser(args.lfw_pairs))
+
             # Get the paths for the corresponding images
-            # lfw_dir = '../data/output_align'
-            # model = '../models/20180402-114759/'
             paths, actual_issame = lfw.get_paths(os.path.expanduser(lfw_dir), pairs)
 
             image_paths_placeholder = tf.placeholder(tf.string, shape=(None, 1), name='image_paths')
@@ -62,10 +61,6 @@ def main(args):
 
             nrof_preprocess_threads = 4
             image_size = (args.image_size, args.image_size)
-            # input_queue = data_flow_ops.FIFOQueue(capacity=100000,
-            #                                       dtypes=[tf.string, tf.int64],
-            #                                       shapes=[(1,), (1,)],
-            #                                       shared_name=None, name=None)
             eval_input_queue = data_flow_ops.FIFOQueue(capacity=2000000,
                                                        dtypes=[tf.string, tf.int32, tf.int32],
                                                        shapes=[(1,), (1,), (1,)],
@@ -77,7 +72,6 @@ def main(args):
 
             # Load the model
             input_map = {'image_batch': image_batch, 'label_batch': label_batch, 'phase_train': phase_train_placeholder}
-
             facenet.load_model(model, input_map=input_map)
 
             # Get output tensor
@@ -152,7 +146,6 @@ def evaluate(sess, enqueue_op, image_paths_placeholder, labels_placeholder, phas
 
 
 def parse_arguments(argv):
-
     parser = argparse.ArgumentParser()
 
     # parser.add_argument('lfw_dir', type=str,

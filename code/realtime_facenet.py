@@ -32,7 +32,7 @@ with tf.Graph().as_default():
         HumanNames = ['Human_45','Human_99','Human_100','Human_102','Human_103','Human_105','Human_107','Human_108', 'Human_114' ,'Human_117','guixiuxiu']    #train human name
 
         print('Loading feature extraction model')
-        modeldir = '../models/facenet/20180601-170420/20180601-170420.pb'
+        modeldir = '../models/facenet/20180602-095622/20180602-095622.pb'
         facenet.load_model(modeldir)
 
         images_placeholder = tf.get_default_graph().get_tensor_by_name("input:0")
@@ -40,7 +40,7 @@ with tf.Graph().as_default():
         phase_train_placeholder = tf.get_default_graph().get_tensor_by_name("phase_train:0")
         embedding_size = embeddings.get_shape()[1]
 
-        classifier_filename = '../classifier/my_classifier_bad.pkl'
+        classifier_filename = '../classifier/my_classifier.pkl'
         classifier_filename_exp = os.path.expanduser(classifier_filename)
         with open(classifier_filename_exp, 'rb') as infile:
             (model, class_names) = pickle.load(infile)

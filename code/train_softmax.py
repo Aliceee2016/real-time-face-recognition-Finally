@@ -61,7 +61,7 @@ def main(args):
     weight_decay = 5e-5
     center_loss_factor = 1e-2
     center_loss_alfa = 0.9
-    gpu_memory_fraction = 1.0
+    #gpu_memory_fraction = 1.0
     network = importlib.import_module(model_def)
     # learning_rate = -1
 

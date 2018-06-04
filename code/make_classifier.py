@@ -9,24 +9,21 @@ import os
 import math
 import pickle
 from sklearn.svm import SVC
-from tensorflow.python.ops import data_flow_ops
 
 
 with tf.Graph().as_default():
 
     with tf.Session() as sess:
 
-        datadir = '../data/images_mtcnn_160'
+        datadir = '../data/mydata_mtcnn_160'
         dataset = facenet.get_dataset(datadir)
         paths, labels = facenet.get_image_paths_and_labels(dataset)
         print('Number of classes: %d' % len(dataset))
         print('Number of images: %d' % len(paths))
 
         print('Loading feature extraction model')
-        print('Loading feature extraction model')
-        modeldir = '../models/facenet/20180601-170420/20180601-170420.pb'
+        modeldir = '../models/facenet/20180602-095622/20180602-095622.pb'
         facenet.load_model(modeldir)
-
 
         images_placeholder = tf.get_default_graph().get_tensor_by_name("input:0")
         embeddings = tf.get_default_graph().get_tensor_by_name("embeddings:0")
